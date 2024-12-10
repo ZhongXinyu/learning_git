@@ -1,4 +1,4 @@
-name: Run Pytest with Conda 
+name: Run Pytest with Conda
 
 on:
   push:
@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
     - name: Check out repository
       uses: actions/checkout@v3
 
@@ -21,16 +20,9 @@ jobs:
       uses: conda-incubator/setup-miniconda@v2
       with:
         auto-update-conda: true
-        python-version: 3.9
+        python-version: 3.12
 
-    - name: Create Conda environment if not cached
-      run: |
-        mkdir -p ~/conda_pkgs_dir
-        conda config --add pkgs_dirs ~/conda_pkgs_dir
-        conda env create --file environment.yml || conda env update --file environment.yml --prune
-        conda list -n Financial-Data-Analysis # Verify environment creation
-    
-    - name: Cache Conda environment
+    - name: Restore Conda Cache
       id: cache-conda
       uses: actions/cache@v3
       with:
@@ -38,7 +30,13 @@ jobs:
         key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
         restore-keys: |
           ${{ runner.os }}-conda-
-    
+
+    - name: Create Conda environment if not cached
+      run: |
+        mkdir -p ~/conda_pkgs_dir
+        conda config --add pkgs_dirs ~/conda_pkgs_dir
+        conda env create --file environment.yml || conda env update --file environment.yml --prune
+        conda list -n Financial-Data-Analysis  # Verify environment creation
+
     - name: Run tests with pytest
       run: conda run -n Financial-Data-Analysis pytest
-
