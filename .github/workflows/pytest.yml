@@ -26,7 +26,7 @@ jobs:
     - name: Create Conda environment if not cached
       run: |
         mkdir -p ~/conda_pkgs_dir
-        conda config --set pkgs_dirs ~/conda_pkgs_dir
+        conda config --add pkgs_dirs ~/conda_pkgs_dir
         conda env create --file environment.yml || conda env update --file environment.yml --prune
         conda list -n myenv  # Verify environment creation
 
