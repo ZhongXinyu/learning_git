@@ -1,4 +1,4 @@
-name: Lint Python Files with Pylint (Using Cached Conda)
+name: Lint Python Files with Pylint
 
 on:
   push:
@@ -16,27 +16,15 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
 
-    - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v2
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        auto-update-conda: true
-        python-version: 3.12
+        python-version: 3.12  # Specify the Python version you need
 
-    - name: Restore Conda Cache
-      id: cache-conda
-      uses: actions/cache@v3
-      with:
-        path: ~/conda_pkgs_dir
-        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
-        restore-keys: |
-          ${{ runner.os }}-conda-
-
-    - name: Create or Update Conda Environment
+    - name: Install Pylint
       run: |
-        mkdir -p ~/conda_pkgs_dir
-        conda config --add pkgs_dirs ~/conda_pkgs_dir
-        conda env create --file environment.yml || conda env update --file environment.yml --prune
-        conda list -n Financial-Data-Analysis  # Verify environment creation
+        python -m pip install --upgrade pip
+        pip install pylint
 
     - name: Run Pylint
-      run: conda run -n Financial-Data-Analysis pylint *.py
+      run: pylint **/*.py
