@@ -28,7 +28,7 @@ jobs:
         mkdir -p ~/conda_pkgs_dir
         conda config --add pkgs_dirs ~/conda_pkgs_dir
         conda env create --file environment.yml || conda env update --file environment.yml --prune
-        conda list -n myenv  # Verify environment creation
+        conda list -n Financial-Data-Analysis # Verify environment creation
     
     - name: Cache Conda environment
       id: cache-conda
@@ -40,5 +40,5 @@ jobs:
           ${{ runner.os }}-conda-
     
     - name: Run tests with pytest
-      run: conda run -n myenv pytest
+      run: conda run -n Financial-Data-Analysis pytest
 
