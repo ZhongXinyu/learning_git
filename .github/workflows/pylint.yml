@@ -39,4 +39,4 @@ jobs:
         conda list -n Financial-Data-Analysis  # Verify environment creation
 
     - name: Run Pylint
-      run: conda run -n Financial-Data-Analysis pylint **/*.py
+      run: conda run -n Financial-Data-Analysis pylint *.py
