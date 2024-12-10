@@ -1,0 +1,42 @@
+name: Run Pytest with Conda 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        python-version: 3.9
+
+    - name: Cache Conda environment
+      id: cache-conda
+      uses: actions/cache@v3
+      with:
+        path: ~/conda_pkgs_dir
+        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
+
+    - name: Create Conda environment if not cached
+      run: |
+        mkdir -p ~/conda_pkgs_dir
+        conda config --set pkgs_dirs ~/conda_pkgs_dir
+        conda env create --file environment.yml || conda env update --file environment.yml --prune
+        conda list -n myenv  # Verify environment creation
+
+    - name: Run tests with pytest
+      run: conda run -n myenv pytest
