@@ -29,7 +29,7 @@ jobs:
         conda config --add pkgs_dirs ~/conda_pkgs_dir
         conda env create --file environment.yml || conda env update --file environment.yml --prune
         conda list -n myenv  # Verify environment creation
-
+    
     - name: Cache Conda environment
       id: cache-conda
       uses: actions/cache@v3
@@ -38,6 +38,7 @@ jobs:
         key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
         restore-keys: |
           ${{ runner.os }}-conda-
-
+    
     - name: Run tests with pytest
       run: conda run -n myenv pytest
+
