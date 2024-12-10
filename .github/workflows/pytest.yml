@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    
     - name: Check out repository
       uses: actions/checkout@v3
 
@@ -22,6 +23,13 @@ jobs:
         auto-update-conda: true
         python-version: 3.9
 
+    - name: Create Conda environment if not cached
+      run: |
+        mkdir -p ~/conda_pkgs_dir
+        conda config --set pkgs_dirs ~/conda_pkgs_dir
+        conda env create --file environment.yml || conda env update --file environment.yml --prune
+        conda list -n myenv  # Verify environment creation
+
     - name: Cache Conda environment
       id: cache-conda
       uses: actions/cache@v3
@@ -30,13 +38,6 @@ jobs:
         key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
         restore-keys: |
           ${{ runner.os }}-conda-
-
-    - name: Create Conda environment if not cached
-      run: |
-        mkdir -p ~/conda_pkgs_dir
-        conda config --set pkgs_dirs ~/conda_pkgs_dir
-        conda env create --file environment.yml || conda env update --file environment.yml --prune
-        conda list -n myenv  # Verify environment creation
 
     - name: Run tests with pytest
       run: conda run -n myenv pytest
