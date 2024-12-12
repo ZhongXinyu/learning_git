@@ -13,4 +13,4 @@ def calculate_diff(x:int, y:int) -> int:
     return x + y
 
 def hello():
-    print("hello")
+    return "hello"
