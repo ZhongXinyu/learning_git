@@ -11,9 +11,3 @@ def calculate_sum(x:int, y:int) -> int:
 def calculate_diff(x:int, y:int) -> int:
     # fix bug here:
     return x + y
-
-def calculate_product(x:int, y:int) -> int:
-    return x * y
-
-def calculate_product2(x:int, y:int) -> int:
-    return x * y
